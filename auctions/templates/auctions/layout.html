@@ -1,0 +1,86 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Auction - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">    
+    <h1>Auction Hosting Site</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse ml-5" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'allListings' %}">All Listings</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'create' %}">Host Auction</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'myListing' %}">My Listing</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'won' %}">Won</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'watchlist' %}">Watch List</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+                {% else %}
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="float-right text-white">
+            {% if user.is_authenticated %}
+            Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+            Not signed in.
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container">        
+        <hr>
+        {% block body %}
+        {% endblock %}
+    </div>
+    <footer class="page-footer font-small pt-4 mt-auto">
+        <div class="container-fluid text-center text-md-left">
+            <div class="row">
+                <ul class="list-inline mx-auto">
+                    <li class="list-inline-item mx-4"><a href="#">Like us on Facebook</a></li>
+                    <li class="list-inline-item mx-4"><a href="#">Follow us on Instagram</a></li>
+                    <li class="list-inline-item mx-5">&copy; Natty Inc.</li>
+                    <li class="list-inline-item mx-4"><a href="#">Follow us on Twitter</a></li>
+                    <li class="list-inline-item mx-4"><a href="#">Subscribe to our YouTube Channel</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

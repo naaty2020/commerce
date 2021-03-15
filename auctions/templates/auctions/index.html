@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+
+<h2 class="font-weight-light text-center text-lg-left mt-4 mb-0">{{ subtitle }} <small>({{ listings.count }})</small></h2>
+<hr class="mt-2 mb-5">
+
+<div class="row text-center text-lg-left">
+    {% for listing in listings %}
+        <div class="col-lg-3 text-center border my-3 mx-4 p-3">
+            {% if listing.imageurl %}
+            <a href="{% url 'listing' listing.id %}" class="d-block mb-2">
+                <img class="img-fluid mw-100 mh-100" src="{{ listing.imageurl }}" alt="{{ listing.imageurl }}">
+            </a>
+            {% else %}
+            <a href="{% url 'listing' listing.id %}" class="d-block mb-2">Visit</a>
+            {% endif %}
+            <h4>{{ listing.title }}</h4>
+            <p><strong>&#36;{{ listing.bids.last }}</strong></p>
+            <p>{{ listing.description }}</p>            
+        </div>
+    {% empty %}
+    <p>{{ empty }}</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

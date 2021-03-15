@@ -1,0 +1,99 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} {{ item }} {% endblock %}
+
+{% load humanize %}
+
+{% block body %}
+<div class="border my-3 mx-4 p-3">
+    <small class="float-left">Created on <i>{{ item.created_at }} ({{ item.created_at|naturaltime }})</i></small>
+    {% if item.active is True and user.is_authenticated and item.user != user %}
+    <form action="{% url 'listing' item.id %}" method="post" class="float-right">
+        {% csrf_token %}
+        {% if item in user.watched.all %}
+        <input type="submit" value="Remove from Watchlist" class="btn btn-dark" name="watch_form">
+        {% else %}
+        <input type="submit" value="Add to Watchlist" class="btn btn-outline-success" name="watch_form">
+        {% endif %}
+    </form>
+    {% endif %}
+    <br>
+    <div class="row"><img src="{{ item.imageurl }}" alt="{{ item.imageurl }}" class="my-4 mx-auto"></div>
+    <h1 class="mb-4">{{ item.title }}</h1>
+    <p><strong>Host</strong>: {{ item.user }}</p>
+    <p><strong>Description</strong>: {{ item.description }}</p>
+    <ul class="list-inline">
+        <strong>Categories</strong>:
+        {% for i in item.categories.all %}
+        <li class="list-inline-item">
+            <a href="{% url 'cat_list' i.id %}">{{ i }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <p><strong>Current Bid</strong>: &#36;{{ current_bid }} (<strong>{{ item.bids.all.count}}</strong> bid(s)
+        so far including the initial bid)</p>
+    {% if current_bid.user == user and item.user != current_bid.user and item.active%}
+    <p>Yours is the current largest bid</p>
+    {% endif %}
+</div>
+<div class="my-3 mx-4 p-3">
+    {% if item.active %}
+    {% if user.is_authenticated %}
+    {% if item.user != user %}    
+    <form action="{% url 'listing' item.id %}" method="post" class="form-inline">
+        {% csrf_token %}
+        <div class="form-group mr-3 mb-2">
+            <input type="number" id="b" class="form-control border border-success" min="{{ current_bid }}" name="amount"
+                placeholder="Bid here" required>
+        </div>
+        <input type="submit" value="Bid" class="btn btn-outline-success mb-2" name="bid_form">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger ml-3"> {{ message }} </div>
+        {% endfor %}
+        {% endif %}
+    </form>
+    {% else %}
+    <form action="{% url 'listing' item.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Close Auction" class="btn btn-dark" name="close_form">
+    </form>
+    {% endif %}
+    {% endif %}
+    {% else %}
+    {% if item in user.won.all%}
+    <div class="alert alert-success text-center" role="alert">Congratulations! You won this Auction!</div>
+    {% else %}
+    <div class="p-3 mb-2 bg-dark text-white text-center">Closed Auction</div>
+    {% endif %}
+    {% endif %}
+    {% if user.is_authenticated %}
+    <div class="row">
+        <div class="form-group col-sm-7">
+            <form action="{% url 'listing' item.id %}" method="post" class="form-horizontal">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="text"><strong>{{ user }}</strong>:</label>
+                    <textarea class="form-control" id="text" rows="4" name="text"
+                        placeholder="Comment on the Item here."></textarea>
+                </div>
+                <input type="submit" value="Post" class="btn btn-dark" name="comment_form">
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    <h3 class="mb-4">Comments<small class="float-right">{{ item.comments.all.count }} comment(s)</small></h3>
+    {% for comment in item.comments.all %}
+    <div class="mb-4" style="border-bottom: 1px dotted #ccc;">
+        <div class="row">
+            <div class="col-md-10">
+                <p><strong>{{ comment.user }}</strong>:&nbsp;{{ comment }}</p>
+            </div>
+            <div class="col-md-2">
+                <small class="float-right">{{ comment.created_at|naturaltime }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
