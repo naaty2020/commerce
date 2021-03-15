@@ -1,9 +1,6 @@
-# Commerce (Project 2)
-**last updated on Sunday, September 20, 2020**
+# Commerce
 
-## **CS50's Web Programming with Python and JavaScript**
-
-This is the third project under this course. It's goal is to design an eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”
+This project's goal is to design an eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”
 
 This project's source code includes 2 folders, a manage.py file which manages the whole application and an sqlite database file. Below are the **main files** under those folders.
 
